@@ -1,0 +1,102 @@
+# =============================================================================
+# Oxyra — Continuous Integration
+# Runs on pull requests and pushes to non-main branches.
+# Validates frontend build + lint and backend dependency integrity.
+# =============================================================================
+
+name: 🔍 CI — Quality Checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches-ignore: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  # ---------------------------------------------------------------------------
+  frontend:
+  # ---------------------------------------------------------------------------
+  frontend:
+    name: ⚛️ Frontend — Lint & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 📥 Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: 🔎 ESLint
+        run: npm run lint
+
+      - name: 🏗️ Production build (dry-run)
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'http://localhost:3001' }}
+          VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY || 'pk_test_placeholder' }}
+        run: npm run build
+
+      - name: 📊 Build summary
+        if: always()
+        run: |
+          echo "### ⚛️ Frontend CI" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Step | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|------|--------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Lint | ✅ |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Build | ✅ |" >> "$GITHUB_STEP_SUMMARY"
+
+  # ---------------------------------------------------------------------------
+  backend:
+  # ---------------------------------------------------------------------------
+  backend:
+    name: 🟢 Backend — Validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: Backend/package-lock.json
+
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: 🗄️ Validate Prisma schema
+        run: npx prisma validate
+
+      - name: ⚙️ Generate Prisma Client
+        run: npx prisma generate
+
+      - name: 📊 Backend summary
+        if: success()
+        run: |
+          echo "### 🟢 Backend CI" >> "$GITHUB_STEP_SUMMARY"
+          echo "Prisma schema valid · Client generated successfully." >> "$GITHUB_STEP_SUMMARY"

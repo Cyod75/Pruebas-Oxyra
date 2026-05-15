@@ -1,0 +1,85 @@
+# 
+# Logs
+# 
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 
+# Node / React
+# 
+# Root and workspace-installed node modules
+/node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Build / output folders
+/dist/
+/build/
+frontend/dist/
+frontend/dist-ssr/
+backend/dist/
+backend/dist-ssr/
+frontend/dev-dist/
+dev-dist/
+frontend/*.local
+
+# 
+# Backend
+# 
+backend/*.local
+
+# 
+# Editor directories and files
+# 
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+android/
+
+# 
+# Claves / secretos
+# 
+## Storage containing keys (private keys must NOT be committed)
+storage/
+BD/
+/legal-site/
+# Environment files (may contain secrets)
+.env
+.env.*
+
+# Private key and certificate files
+*.pem
+*.key
+*.p12
+*.jks
+id_rsa
+id_rsa.pub
+
+# Common CI / cache / coverage
+.cache/
+.parcel-cache/
+.vite/
+coverage/
+.nyc_output/
+.next/
+out/
+
+# Misc
+.DS_Store
+.pnp
+.pnp.js
+
+
+# End of file

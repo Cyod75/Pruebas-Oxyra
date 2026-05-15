@@ -1,0 +1,311 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model ai_logs {
+  idLog       Int                 @id @default(autoincrement())
+  usuario_id  Int
+  tipo_accion ai_logs_tipo_accion @default(generar_rutina)
+  status      ai_logs_status      @default(success)
+  detalles    String?             @db.Text
+  created_at  DateTime?           @default(now()) @db.Timestamp(0)
+  usuarios    usuarios            @relation(fields: [usuario_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_ai_user")
+
+  @@index([usuario_id, created_at], map: "idx_ai_usage")
+  @@index([usuario_id, tipo_accion], map: "idx_usuario_tipo")
+}
+
+model comentarios {
+  idComentario Int       @id @default(autoincrement())
+  post_id      Int
+  usuario_id   Int
+  texto        String    @db.VarChar(500)
+  created_at   DateTime? @default(now()) @db.Timestamp(0)
+  posts        posts     @relation(fields: [post_id], references: [idPost], onDelete: Cascade, onUpdate: Restrict, map: "fk_com_post")
+  usuarios     usuarios  @relation(fields: [usuario_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_com_user")
+
+  @@index([post_id], map: "fk_com_post")
+  @@index([usuario_id], map: "fk_com_user")
+}
+
+model ejercicios {
+  idEjercicio     Int                       @id @default(autoincrement())
+  nombre          String                    @db.VarChar(100)
+  grupo_muscular  String                    @db.VarChar(100)
+  tipo_medicion   ejercicios_tipo_medicion? @default(Peso_Reps)
+  instrucciones   String?                   @db.Text
+  video_url       String?                   @db.VarChar(255)
+  historial_sets  historial_sets[]
+  rutina_detalles rutina_detalles[]
+}
+
+model empresas {
+  idEmpresa   Int         @id @default(autoincrement())
+  nombre      String      @db.VarChar(100)
+  logo_url    String?     @db.VarChar(255)
+  web_oficial String?     @db.VarChar(255)
+  productos   productos[]
+}
+
+model historial_sets {
+  idSet                     Int                @id @default(autoincrement())
+  workout_id                Int
+  ejercicio_id              Int?
+  nombre_ejercicio_snapshot String?            @db.VarChar(100)
+  numero_serie              Int
+  kg_levantados             Decimal            @db.Decimal(6, 2)
+  reps_realizadas           Int
+  rpe                       Int?
+  es_calentamiento          Boolean?           @default(false)
+  es_record_personal        Boolean?           @default(false)
+  ejercicios                ejercicios?        @relation(fields: [ejercicio_id], references: [idEjercicio], onUpdate: Restrict, map: "fk_hs_ejercicio")
+  historial_workouts        historial_workouts @relation(fields: [workout_id], references: [idWorkout], onDelete: Cascade, onUpdate: Restrict, map: "fk_hs_workout")
+
+  @@index([ejercicio_id], map: "fk_hs_ejercicio")
+  @@index([workout_id], map: "fk_hs_workout")
+}
+
+model historial_workouts {
+  idWorkout        Int              @id @default(autoincrement())
+  usuario_id       Int
+  rutina_origen_id Int?
+  nombre_sesion    String?          @db.VarChar(100)
+  fecha_inicio     DateTime         @default(now()) @db.DateTime(0)
+  fecha_fin        DateTime?        @db.DateTime(0)
+  duracion_minutos Int?
+  volumen_total_kg Int?             @default(0)
+  created_at       DateTime?        @default(now()) @db.Timestamp(0)
+  historial_sets   historial_sets[]
+  rutinas          rutinas?         @relation(fields: [rutina_origen_id], references: [idRutina], onUpdate: Restrict, map: "fk_hw_rutina")
+  usuarios         usuarios         @relation(fields: [usuario_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_hw_user")
+  posts            posts[]
+
+  @@index([rutina_origen_id], map: "fk_hw_rutina")
+  @@index([usuario_id], map: "fk_hw_user")
+}
+
+model likes {
+  usuario_id Int
+  post_id    Int
+  fecha      DateTime? @default(now()) @db.Timestamp(0)
+  posts      posts     @relation(fields: [post_id], references: [idPost], onDelete: Cascade, onUpdate: Restrict, map: "fk_like_post")
+  usuarios   usuarios  @relation(fields: [usuario_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_like_user")
+
+  @@id([usuario_id, post_id])
+  @@index([post_id], map: "fk_like_post")
+}
+
+model posts {
+  idPost             Int                 @id @default(autoincrement())
+  usuario_id         Int
+  workout_id         Int?
+  foto_url           String              @db.VarChar(255)
+  titulo             String?             @db.VarChar(100)
+  descripcion        String?             @db.Text
+  ubicacion          String?             @db.VarChar(100)
+  created_at         DateTime?           @default(now()) @db.Timestamp(0)
+  comentarios        comentarios[]
+  likes              likes[]
+  usuarios           usuarios            @relation(fields: [usuario_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_post_user")
+  historial_workouts historial_workouts? @relation(fields: [workout_id], references: [idWorkout], onUpdate: Restrict, map: "fk_post_workout")
+
+  @@index([usuario_id], map: "fk_post_user")
+  @@index([workout_id], map: "fk_post_workout")
+}
+
+model productos {
+  idProducto       Int                  @id @default(autoincrement())
+  empresa_id       Int
+  nombre           String               @db.VarChar(100)
+  descripcion      String?              @db.Text
+  precio_visual    Decimal?             @db.Decimal(10, 2)
+  codigo_descuento String?              @db.VarChar(50)
+  imagen_url       String?              @db.VarChar(255)
+  enlace_afiliado  String               @db.VarChar(255)
+  categoria        productos_categoria?
+  es_destacado     Boolean?             @default(false)
+  empresas         empresas             @relation(fields: [empresa_id], references: [idEmpresa], onUpdate: Restrict, map: "fk_prod_empresa")
+
+  @@index([empresa_id], map: "fk_prod_empresa")
+}
+
+model rutina_detalles {
+  idDetalle         Int        @id @default(autoincrement())
+  rutina_id         Int
+  ejercicio_id      Int
+  orden             Int
+  series_objetivo   Int?       @default(4)
+  reps_objetivo     String?    @db.VarChar(50)
+  descanso_segundos Int?       @default(90)
+  nota_usuario      String?    @db.VarChar(255)
+  ejercicios        ejercicios @relation(fields: [ejercicio_id], references: [idEjercicio], onDelete: Cascade, onUpdate: Restrict, map: "fk_rd_ejercicio")
+  rutinas           rutinas    @relation(fields: [rutina_id], references: [idRutina], onDelete: Cascade, onUpdate: Restrict, map: "fk_rd_rutina")
+
+  @@index([ejercicio_id], map: "fk_rd_ejercicio")
+  @@index([rutina_id], map: "fk_rd_rutina")
+}
+
+model rutinas {
+  idRutina           Int                  @id @default(autoincrement())
+  usuario_id         Int
+  nombre             String               @db.VarChar(100)
+  objetivo           String?              @db.VarChar(100)
+  descripcion        String?              @db.Text
+  nivel_dificultad   String?              @db.VarChar(50)
+  creada_por_ia      Boolean?             @default(false)
+  es_publica         Boolean?             @default(true)
+  fecha_creacion     DateTime?            @default(now()) @db.Timestamp(0)
+  historial_workouts historial_workouts[]
+  rutina_detalles    rutina_detalles[]
+  usuarios           usuarios             @relation(fields: [usuario_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_rutina_user")
+
+  @@index([usuario_id], map: "fk_rutina_user")
+}
+
+model seguidores {
+  seguidor_id                               Int
+  seguido_id                                Int
+  estado                                    seguidores_estado? @default(aceptado)
+  fecha_seguimiento                         DateTime?          @default(now()) @db.Timestamp(0)
+  usuarios_seguidores_seguido_idTousuarios  usuarios           @relation("seguidores_seguido_idTousuarios", fields: [seguido_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_seguido")
+  usuarios_seguidores_seguidor_idTousuarios usuarios           @relation("seguidores_seguidor_idTousuarios", fields: [seguidor_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_seguidor")
+
+  @@id([seguidor_id, seguido_id])
+  @@index([seguido_id], map: "fk_seguido")
+}
+
+model stats_musculares {
+  usuario_id         Int
+  grupo_muscular     stats_musculares_grupo_muscular
+  fuerza_teorica_max Decimal?                        @default(0.00) @db.Decimal(6, 2)
+  puntos_xp          Int?                            @default(0)
+  rango_actual       stats_musculares_rango_actual?  @default(Sin_Rango)
+  last_updated       DateTime?                       @default(now()) @db.Timestamp(0)
+  usuarios           usuarios                        @relation(fields: [usuario_id], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "fk_stat_user")
+
+  @@id([usuario_id, grupo_muscular])
+}
+
+model usuarios {
+  idUsuario                                   Int                    @id @default(autoincrement())
+  username                                    String                 @unique(map: "username") @db.VarChar(30)
+  email                                       String                 @unique(map: "email") @db.VarChar(100)
+  rol                                         usuarios_rol?          @default(usuario)
+  password_hash                               String?                @db.VarChar(255)
+  google_id                                   String?                @unique(map: "google_id") @db.VarChar(255)
+  nombre_completo                             String?                @db.VarChar(100)
+  foto_perfil                                 String?                @db.VarChar(255)
+  biografia                                   String?                @db.VarChar(150)
+  peso_kg                                     Decimal?               @db.Decimal(5, 2)
+  estatura_cm                                 Int?
+  genero                                      usuarios_genero?
+  es_pro                                      Boolean?               @default(false)
+  es_privada                                  Boolean?               @default(false)
+  fecha_fin_suscripcion                       DateTime?              @db.Date
+  rango_global                                usuarios_rango_global? @default(Sin_Rango)
+  nivel_medio_fuerza                          Int?                   @default(0)
+  notificaciones_activas                      Boolean?               @default(true)
+  created_at                                  DateTime?              @default(now()) @db.Timestamp(0)
+  ai_logs                                     ai_logs[]
+  comentarios                                 comentarios[]
+  historial_workouts                          historial_workouts[]
+  likes                                       likes[]
+  posts                                       posts[]
+  rutinas                                     rutinas[]
+  seguidores_seguidores_seguido_idTousuarios  seguidores[]           @relation("seguidores_seguido_idTousuarios")
+  seguidores_seguidores_seguidor_idTousuarios seguidores[]           @relation("seguidores_seguidor_idTousuarios")
+  stats_musculares                            stats_musculares[]
+}
+
+enum stats_musculares_grupo_muscular {
+  Pecho
+  Espalda_Alta  @map("Espalda Alta")
+  Espalda_Media @map("Espalda Media")
+  Espalda_Baja  @map("Espalda Baja")
+  Hombro
+  Cuadriceps
+  Femoral
+  Gluteo
+  Gemelo
+  Aductores
+  B_ceps        @map("Bíceps")
+  Tr_ceps       @map("Tríceps")
+  Antebrazo
+  Trapecio
+  Abdomen
+  General
+}
+
+enum ai_logs_tipo_accion {
+  generar_rutina
+  escaneo_corporal
+  ajuste_dieta
+}
+
+enum seguidores_estado {
+  aceptado
+  pendiente
+}
+
+enum ai_logs_status {
+  success
+  failed
+  blocked
+}
+
+enum usuarios_rol {
+  usuario
+  admin
+  superadmin
+}
+
+enum ejercicios_tipo_medicion {
+  Peso_Reps
+  Peso_Tiempo
+  Solo_Tiempo
+  Peso_Corporal
+}
+
+enum stats_musculares_rango_actual {
+  Sin_Rango @map("Sin Rango")
+  Hierro
+  Bronce
+  Plata
+  Oro
+  Platino
+  Esmeralda
+  Diamante
+  Campeon
+  Oxyra
+}
+
+enum productos_categoria {
+  Suplementos
+  Ropa
+  Equipamiento
+  Otros
+}
+
+enum usuarios_genero {
+  M
+  F
+  Otro
+}
+
+enum usuarios_rango_global {
+  Sin_Rango @map("Sin Rango")
+  Hierro
+  Bronce
+  Plata
+  Oro
+  Platino
+  Esmeralda
+  Diamante
+  Campeon
+  Oxyra
+}

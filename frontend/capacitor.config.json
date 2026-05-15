@@ -1,0 +1,18 @@
+{
+  "appId": "com.oxyra.app",
+  "appName": "Oxyra",
+  "webDir": "dist",
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    },
+    "SocialLogin": {
+      "google": {
+        "webClientId": "347793586128-k66ji06lfekp2cc9ipd2g7tsvnht739q.apps.googleusercontent.com",
+        "androidClientId": "347793586128-3mp3j044tpd1cppoktiriuefmogsqa5h.apps.googleusercontent.com",
+        "mode": "online"
+      }
+    }
+  }
+}
+

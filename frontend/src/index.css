@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* MODO CLARO */
+    --background: 0 0% 100%;
+    /* Blanco puro */
+    --foreground: 240 10% 3.9%;
+    /* Negro casi puro */
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 221.2 83.2% 53.3%;
+    /* Azul Eléctrico*/
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+  }
+
+  /* MODO OSCURO */
+  .dark {
+    --background: 240 10% 3.9%;
+    /* #09090b (Zinc 950) - Negro Profundo Neutro */
+    --foreground: 0 0% 98%;
+    /* Blanco Hielo */
+
+    /* Tarjetas con ligera transparencia y negro suave */
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    /* Azul Neón Vibrante */
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 240 3.7% 15.9%;
+    /* Zinc 800 para elementos secundarios */
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    /* Zinc 800 para inputs inactivos */
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    /* Hover effect */
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Ocultar barra de scroll globalmente pero mantener funcionalidad */
+  * {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE y Edge */
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari y Opera */
+  }
+
+  input,
+  textarea,
+  [contenteditable="true"] {
+    -webkit-user-select: auto;
+    user-select: auto;
+  }
+
+  /* Clases adicionales para forzar el ocultamiento de scrollbars localmente */
+  .hidden-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .hidden-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Ocultar flechas de inputs de número */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+}
+
+
+/* CLASES DE UTILIDAD PARA GLASSMORPHISM*/
+.glass {
+  @apply bg-background/60 backdrop-blur-md border-b border-white/5;
+}
+
+.glass-card {
+  @apply bg-card/50 backdrop-blur-sm border border-white/10 shadow-lg;
+}
+
+/* 
+   SAFE AREAS - Solo activo en la app nativa (Capacitor)
+   En web browser las variables quedan a 0px (sin efecto visual)
+   Capacitor añade automáticamente la clase "capacitor" al <body>
+    */
+:root {
+  --safe-area-top: 0px;
+  --safe-area-bottom: 0px;
+}
+
+body.is-native-app {
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Ocultar el Action Button de Stripe Link / Test Mode que persiste en pantalla al cerrar */
+div[class*="FloatingActionButton-wrapper"],
+div[class*="Container"]>header>svg[class*="Logo"],
+iframe[src*="elements-inner-easel"],
+iframe[title*="desarrolladores de Stripe"],
+iframe[title*="Stripe developer"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

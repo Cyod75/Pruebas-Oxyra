@@ -1,0 +1,914 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "connection_error": "Error de conexión",
+    "back": "Atrás",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "confirm": "Confirmar",
+    "finish": "Finalizar",
+    "not_defined": "No definido",
+    "rename": "Renombrar"
+  },
+  "nav": {
+    "train": "Entrenar",
+    "nutrition": "Nutrición",
+    "ranks": "Rangos",
+    "profile": "Perfil"
+  },
+  "connection": {
+    "no_connection_title": "Sin conexión a Internet",
+    "no_connection_desc": "No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "connecting_ellipsis": "Conectando..."
+  },
+  "connections": {
+    "followers": "Seguidores",
+    "following": "Siguiendo",
+    "no_followers_yet": "Aún no tienes seguidores",
+    "no_following_yet": "Aún no sigues a nadie"
+  },
+  "personal_data": {
+    "title": "Datos Personales",
+    "account_section": "Cuenta",
+    "physique_section": "Físico",
+    "username": "Usuario",
+    "email": "Correo Electrónico",
+    "gender": "Género",
+    "weight": "Peso",
+    "height": "Altura",
+    "edit_hint": "Para modificar tu información, dirígete a tu <1>Perfil</1> y selecciona Editar Perfil."
+  },
+  "settings": {
+    "title": "Configuración",
+    "account": "Tu Cuenta",
+    "manage_subscription": "Gestionar Suscripción",
+    "oxyra_pro": "Oxyra Pro",
+    "renew_in": "Renueva en {{days}} días",
+    "active_subscription": "Suscripción activa",
+    "level_up": "Eleva tu físico",
+    "personal_data": "Datos Personales",
+    "personal_data_sub": "Físico, Nombre, Foto",
+    "private_account": "Cuenta Privada",
+    "private_account_sub": "Solo visible para tus seguidores",
+    "security": "Seguridad",
+    "change_password": "Cambiar contraseña",
+    "experience": "Experiencia",
+    "visual_theme": "Tema Visual",
+    "language": "Idioma",
+    "weight_unit": "Unidad de Peso",
+    "notifications": "Notificaciones",
+    "legal": "Legal",
+    "privacy_policy": "Política de Privacidad",
+    "terms": "Términos y Condiciones",
+    "about_us": "Sobre Nosotros",
+    "discord": "Discord",
+    "discord_sub": "Únete a nuestra comunidad",
+    "instagram": "Instagram",
+    "instagram_sub": "Síguenos para novedades",
+    "danger_zone": "Zona de Peligro",
+    "logout": "Cerrar Sesión",
+    "delete_account": "Eliminar Cuenta",
+    "security_sheet": {
+      "title": "Cambiar Contraseña",
+      "description": "Seguridad de la cuenta.",
+      "current_label": "Actual",
+      "new_label": "Nueva",
+      "confirm_label": "Confirmar",
+      "updating": "Actualizando...",
+      "update": "Actualizar"
+    },
+    "delete_account_sheet": {
+      "title": "¿Eliminar cuenta?",
+      "description": "Esta acción es permanente. Perderás todos tus registros, rutinas y seguidores de forma irreversible.",
+      "send_code": "Sí, enviar código al correo",
+      "sending": "Procesando...",
+      "cancel": "Cancelar",
+      "verify_title": "Verifica tu correo",
+      "verify_description": "Hemos enviado un código de 6 dígitos para confirmar la eliminación definitiva.",
+      "success_title": "Cuenta Eliminada",
+      "success_description": "Lamentamos verte partir. Redirigiendo...",
+      "error_sending": "Error al enviar el código",
+      "error_deleting": "Error al eliminar la cuenta",
+      "verification_code": "Código de verificación",
+      "confirm_delete": "Confirmar Eliminación Final",
+      "deleting": "Eliminando...",
+      "back": "Volver atrás",
+      "error_digits": "Introduce el código de 6 dígitos"
+    },
+    "notification_sheet": {
+      "title": "¿Desactivar Notificaciones?",
+      "description": "Te perderás recordatorios de entrenamiento, actualizaciones de ranking y avisos de seguridad.",
+      "security_note": "Oxyra utiliza el correo solo para información vital sobre tu progreso y cuenta. No enviamos spam.",
+      "confirm": "Sí, desactivar notificaciones",
+      "disabling": "Desactivando...",
+      "cancel": "Cancelar (Mantener activadas)"
+    },
+    "activity_sheet": {
+      "title": "ACTIVIDAD",
+      "subtitle": "Solicitudes y notificaciones",
+      "loading": "Cargando actividad...",
+      "empty": "Sin actividad reciente",
+      "requested_follow": "Solicita seguirte",
+      "started_following": "Comenzó a seguirte"
+    },
+    "language_sheet_title": "Idioma",
+    "language_sheet_desc": "Selecciona tu idioma preferido",
+    "spanish": "Español",
+    "english": "Inglés"
+  },
+  "profile": {
+    "loading": "Cargando...",
+    "preparing_profile": "PREPARANDO PERFIL...",
+    "error_loading": "Error al cargar el perfil",
+    "workouts": "Entrenos",
+    "followers": "Seguidores",
+    "following": "Siguiendo",
+    "add_bio": "Añade una biografía sobre ti.",
+    "edit_profile": "Editar Perfil",
+    "share": "Compartir",
+    "pro_athlete": "Atleta Pro",
+    "scan_body": "Escanea tu cuerpo",
+    "scan_body_sub": "Obtén métricas físicas con IA",
+    "link_copied": "Enlace copiado al portapapeles",
+    "link_copy_error": "No se pudo copiar el enlace automáticamente",
+    "share_title": "Perfil de {{name}}",
+    "share_text": "¡Entrena conmigo en Oxyra!",
+    "share_cancelled": "Compartir cancelado",
+    "default_user": "Usuario",
+    "edit": {
+      "title": "Editar Perfil",
+      "cancel": "Cancelar",
+      "done": "Listo",
+      "change_photo": "Cambiar foto",
+      "name_label": "Nombre",
+      "name_placeholder": "Tu nombre",
+      "name_required": "El nombre es obligatorio",
+      "bio_label": "Bio",
+      "bio_placeholder": "Cuéntale al mundo quién eres...",
+      "username_label": "Usuario",
+      "username_placeholder": "usuario",
+      "gender_label": "Género",
+      "male": "Masculino",
+      "female": "Femenino",
+      "other": "Otro",
+      "weight_label": "Peso (kg)",
+      "height_label": "Altura (cm)",
+      "save": "Guardar Cambios",
+      "error_updating": "Error al actualizar",
+      "error_connection": "Error de conexión",
+      "error_image_size": "La imagen es demasiado pesada para el servidor (Max ~1MB).",
+      "error_image_format": "Por favor, selecciona exclusivamente un formato de imagen válido (JPG, PNG).",
+      "error_image_limit": "El archivo supera el límite permitido de {{max}}MB."
+    },
+    "physique_scan": {
+      "title": "Escaneo Corporal IA",
+      "results_title": "Resultado del Escaneo",
+      "subtitle": "Analiza tu físico como un juez IFBB profesional.",
+      "results_subtitle": "Análisis IFBB de tu físico por Vision",
+      "instructions": "Sube dos fotos de tu físico: una de <1>frente</1> y una de <1>espalda</1>. La IA analizará tu musculatura y te asignará un rango por cada grupo muscular.",
+      "front_photo": "FOTO FRONTAL",
+      "back_photo": "FOTO ESPALDA",
+      "front": "FRENTE",
+      "back": "ESPALDA",
+      "ready": "LISTO",
+      "privacy_note": "Privacidad GDPR: Tus fotos NO se almacenan. Se analizan en memoria y se eliminan inmediatamente.",
+      "analyze_button": "Analizar Físico",
+      "limit_note": "Limitado a 3 escaneos diarios · Solo PRO",
+      "analyzing_title": "Analizando tu Físico",
+      "analyzing_subtitle": "La IA está evaluando volumen, definición y simetría muscular...",
+      "completed": "Análisis Completado",
+      "remaining_scans": "{{count}} escaneo restante hoy",
+      "remaining_scans_plural": "{{count}} escaneos restantes hoy",
+      "general_analysis": "Análisis General",
+      "muscle_ranks": "Rangos por Músculo",
+      "new_scan": "Nuevo Escaneo",
+      "error_title": "Error en el Análisis",
+      "retry": "Intentar de Nuevo",
+      "errors": {
+        "invalid_type": "Solo se permiten imágenes JPEG, PNG o WebP.",
+        "invalid_size": "La imagen no puede superar los 5MB.",
+        "missing_photos": "Necesitas subir ambas fotos (frente y espalda).",
+        "pro_only": "🔒 Esta función es exclusiva para usuarios Oxyra Pro.",
+        "limit_reached": "⚠️ Límite diario alcanzado.",
+        "safety_block": "Safety block. Asegúrate de usar ropa deportiva.",
+        "invalid_human": "Las imágenes no corresponden a un cuerpo válido.",
+        "connection": "Error de conexión con el servidor."
+      }
+    },
+    "public_profile": {
+      "user_not_found": "Usuario no encontrado",
+      "athlete": "ATHLETE",
+      "following": "SIGUIENDO",
+      "pending": "PENDIENTE",
+      "follow": "SEGUIR",
+      "activity": "ACTIVIDAD",
+      "recent_logs": "RECENT LOGS",
+      "private_account_title": "Cuenta Privada",
+      "private_account_desc": "Sigue a este atleta para ver sus estadísticas y entrenamientos.",
+      "no_activity": "Sin actividad registrada",
+      "duration_label": "DURACIÓN"
+    }
+  },
+  "training": {
+    "title": "Entrenamiento",
+    "subtitle": "Diseña tu camino hacia la grandeza.",
+    "generative_ai": "IA Generativa",
+    "pro_feature": "Función PRO",
+    "create_gemini": "Crear con <b>Gemini</b>",
+    "manual": "Manual",
+    "create_empty": "Crear rutinas <b>vacías</b>",
+    "my_routines": "Mis Rutinas",
+    "add_workout": "Añadir entrenamiento",
+    "rename_title": "Renombrar Rutina",
+    "rename_desc": "Elige un nombre corto y descriptivo.",
+    "rename_placeholder": "Ej: Pecho y Tríceps",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "rename_error": "Error al renombrar",
+    "preparing": "Preparando entrenamiento...",
+    "loading_error": "Error al cargar rutinas",
+    "start_workout_button": "INICIAR ENTRENAMIENTO",
+    "ai_plan": "AI PLAN",
+    "manual_plan": "MANUAL",
+    "unnamed": "Sin nombre",
+    "days": "{{count}} días",
+    "general": "General",
+    "levels": {
+      "Beginner": "Principiante",
+      "Intermediate": "Intermedio",
+      "Advanced": "Avanzado",
+      "Elite": "Élite"
+    },
+    "manual_routine": {
+      "title": "Nueva Rutina",
+      "name_label": "NOMBRE",
+      "name_placeholder": "Ej: Pierna Frecuencia 2...",
+      "exercises_count": "Ejercicios ({{count}})",
+      "add_button": "Añadir ejercicios",
+      "tap_to_add": "Toca para añadir tu primer ejercicio",
+      "save_button": "Crear rutina",
+      "alert_name": "Ponle un nombre a la rutina",
+      "alert_exercises": "Añade al menos un ejercicio",
+      "alert_error": "Error al guardar la rutina"
+    },
+    "exercise_selector": {
+      "title": "Añadir Ejercicios",
+      "search_placeholder": "Buscar (ej: Press Banca, Pecho...)",
+      "add_count": "Añadir ({{count}})"
+    }
+  },
+  "shop": {
+    "title": "Nutrición",
+    "categories": {
+      "todos": "Todos",
+      "suplementos": "Suplementos",
+      "ropa": "Ropa",
+      "equipamiento": "Equipamiento",
+      "otros": "Otros"
+    },
+    "tabs": {
+      "products": "Productos",
+      "nutrition": "Mi Dieta"
+    },
+    "subtitles": {
+      "products": "Equipamiento Pro",
+      "nutrition": "Mi Diario Nutricional"
+    },
+    "search_placeholder": "Buscar producto...",
+    "featured": "Destacados",
+    "results": "Resultados",
+    "catalog": "Catálogo",
+    "no_products": "No encontramos productos.",
+    "top_sales": "Top Ventas",
+    "about_product": "Sobre el producto",
+    "promo_code": "Código Oxyra",
+    "copy": "Copiar",
+    "view_in": "Ver en {{company}}",
+    "promo_badge": "PROMO",
+    "details": {
+      "title": "Detalles del producto",
+      "description": "Información detallada sobre {{name}}"
+    }
+  },
+  "nutrition": {
+    "hydration": "Hidratación",
+    "calories": "Calorías",
+    "protein": "Proteína",
+    "carbs": "Carbos",
+    "fat": "Grasa",
+    "macros": {
+      "protein_short": "P",
+      "carbs_short": "C",
+      "fat_short": "G",
+      "calories_short": "kcal"
+    },
+    "goal": "Objetivo",
+    "remaining": "Restantes",
+    "loading": "Cargando nutrición…",
+    "error": "Error al cargar nutrición",
+    "retry": "Reintentar",
+    "touch_to_add": "Toca <span className=\"text-primary font-bold\">+</span> para añadir alimentos",
+    "meals": {
+      "desayuno": "Desayuno",
+      "almuerzo": "Almuerzo",
+      "cena": "Cena",
+      "snacks": "Snacks"
+    },
+    "search": {
+      "add_portion": "Añadir porción",
+      "amount": "Cantidad (gramos)",
+      "grams": "gramos",
+      "nutritional_value": "Aporte nutricional",
+      "add_to": "Añadir a {{meal}}",
+      "add_food": "Añadir alimento",
+      "search_tab": "🔍 Buscar",
+      "scan_tab": "📷 Escáner",
+      "placeholder": "Buscar alimento… (ej: pollo, arroz, Coca-Cola)",
+      "results_found": "resultados encontrados",
+      "no_results": "Sin resultados para \"{{query}}\"",
+      "search_prompt": "Busca cualquier alimento",
+      "usda_label": "🏛️ USDA – Alimentos genéricos",
+      "off_label": "📦 OFF – Productos empaquetados",
+      "databases_info": "Combinamos dos bases de datos para darte\nlos mejores resultados nutricionales.",
+      "unnamed_food": "Producto sin nombre",
+      "errors": {
+        "generic": "No se pudieron cargar resultados. Comprueba la conexión.",
+        "not_found": "Producto con código \"{{code}}\" no encontrado.",
+        "barcode": "Error al buscar el código de barras."
+      },
+      "scanner": {
+        "stop": "Detener cámara",
+        "start": "Abrir Cámara y Escanear",
+        "upload": "Subir foto del código de barras",
+        "analyzing": "Analizando imagen…",
+        "not_found": "No se detectó ningún código de barras en la imagen.",
+        "not_accessible": "No se pudo acceder a la cámara. Asegúrate de que no hay otra app usándola.",
+        "init_error": "Error al inicializar el escáner. Intenta recargar la página.",
+        "detected_code": "✅ Código detectado: {{code}}",
+        "permission_denied": "Permiso de cámara denegado. Ve a la configuración de tu navegador y permite el acceso a la cámara para este sitio.",
+        "not_supported": "Tu navegador no soporta acceso a la cámara. Usa Chrome o Edge actualizado.",
+        "requesting_permission": "Solicitando permiso de cámara…",
+        "permission_tip": "Para habilitar la cámara: haz clic en el 🔒 o 📷 en la barra de direcciones del navegador → Cámara → Permitir → Recarga la página."
+      }
+    }
+  },
+  "subscription": {
+    "title": "Usuarios Pro suelen ganar un <br/> <0>40% más de músculo</0>",
+    "plan_personalised": "Obtén tu plan personalizado con IA",
+    "plan_personalised_sub": "Una planificación semanal adaptada a tus objetivos",
+    "scan_body": "Escanea tu cuerpo con IA",
+    "scan_body_sub": "Analiza tus peores y mejores músculos",
+    "generate_workouts": "Genera entrenamientos con IA",
+    "generate_workouts_sub": "Personaliza y genera una rutina perfecta hiper-personalizada al instante.",
+    "secure_payment": "Pago Seguro",
+    "initializing_gateway": "Iniciando pasarela segura...",
+    "server_error": "No se pudo conectar con el servidor.",
+    "subscription_title": "Suscripción",
+    "active": "Activo",
+    "yearly": "anual",
+    "monthly": "mensual",
+    "next_billing": "Próximo cobro",
+    "renewal_date": "Fecha de renovación",
+    "in_days": "En {{days}} días",
+    "not_defined": "No definida",
+    "billing_cycle": "Ciclo",
+    "payment_method": "Método",
+    "expires": "Vence",
+    "auto_renewal": "Renovación automática",
+    "billing": "Facturación",
+    "payment": "Pago",
+    "status": "Estado",
+    "activated": "Activada",
+    "anti_fraud": "Protección antifraude",
+    "cancel_subscription": "Cancelar suscripción",
+    "cancel_plan": "Cancelar plan",
+    "cancel_info": "Al cancelar seguirás disfrutando de Oxyra Pro hasta el {{date}}. Después, tu cuenta pasará al plan gratuito.",
+    "cancel_info_fallback": "Al cancelar seguirás disfrutando de Oxyra Pro hasta el final del ciclo ({{days}} días). Después, tu cuenta pasará al plan gratuito.",
+    "lost_benefits": {
+      "analysis": "Análisis muscular con IA",
+      "routines": "Rutinas personalizadas con IA",
+      "plan": "Plan semanal adaptado",
+      "ads": "Sin anuncios"
+    },
+    "keep_subscription": "Mantener suscripción",
+    "confirm_cancel": "Sí, cancelar al final del período",
+    "cancel_anytime": "Cancela en cualquier momento, sin compromiso",
+    "continue": "Continuar"
+  },
+  "statistics": {
+    "title": "Estadísticas",
+    "error_fetching": "Error al cargar estadísticas",
+    "loading_biometry": "SINCRONIZANDO BIOMETRÍA...",
+    "no_activity": "Sin Actividad",
+    "no_activity_desc": "Entrena por primera vez para generar tu mapa muscular.",
+    "start": "Comenzar",
+    "scan_title": "Escaneo IA"
+  },
+  "search": {
+    "community": "Comunidad",
+    "explore": "Explorar",
+    "ranking": "Ranking",
+    "search_placeholder": "Buscar atletas...",
+    "searching": "Buscando perfiles...",
+    "discover_community": "Descubre la comunidad",
+    "discover_desc": "Encuentra amigos, competidores o inspiración.",
+    "not_found": "No pudimos encontrar \"{{query}}\"",
+    "try_another": "Prueba con otro nombre de usuario.",
+    "results": "Resultados"
+  },
+  "muscles": {
+    "Pecho": "Pecho",
+    "Espalda Alta": "Espalda Alta",
+    "Espalda Media": "Espalda Media",
+    "Espalda Baja": "Espalda Baja",
+    "Hombro": "Hombro",
+    "Trapecio": "Trapecio",
+    "Cuadriceps": "Cuádriceps",
+    "Femoral": "Femoral",
+    "Gluteo": "Glúteo",
+    "Gemelo": "Gemelo",
+    "Aductores": "Aductores",
+    "Bíceps": "Bíceps",
+    "Tríceps": "Tríceps",
+    "Antebrazo": "Antebrazo",
+    "Abdomen": "Abdomen"
+  },
+  "ranks": {
+    "unranked": "Sin Rango",
+    "analysis": "Análisis Biomecánico",
+    "current_rank": "Rango Actual",
+    "potential": "Potencial",
+    "next_milestone": "Próximo Hito",
+    "rank_progress": "Progreso de Rango",
+    "optimized_exercises": "Ejercicios Optimizados",
+    "level": "Nivel {{level}}",
+    "elite": "Elite",
+    "info": {
+      "title": "Sistema de Rangos",
+      "subtitle": "Cómo medimos tu evolución",
+      "how_it_works_title": "¿Cómo se calcula?",
+      "how_it_works_desc": "Tu rango en cada grupo muscular se basa en la progresión de cargas, la frecuencia de entrenamiento y la intensidad detectada en tus sesiones durante los últimos 30 días.",
+      "hierarchy_title": "Jerarquía Biométrica",
+      "quote": "\"La constancia es el único camino hacia el rango Oxyra.\"",
+      "list": {
+        "Oxyra": { "name": "Oxyra", "desc": "Nivel Legendario. Rendimiento máximo absoluto." },
+        "Campeon": { "name": "Campeón", "desc": "Casi insuperable. Dominancia total del movimiento." },
+        "Diamante": { "name": "Diamante", "desc": "Élite. Técnica y fuerza sobresalientes." },
+        "Esmeralda": { "name": "Esmeralda", "desc": "Avanzado. Gran balance muscular." },
+        "Platino": { "name": "Platino", "desc": "Experto. Superando límites convencionales." },
+        "Oro": { "name": "Oro", "desc": "Competente. Buena base atlética." },
+        "Plata": { "name": "Plata", "desc": "Intermedio. En proceso de optimización." },
+        "Bronce": { "name": "Bronce", "desc": "Iniciante. Cimentando las bases." },
+        "Hierro": { "name": "Hierro", "desc": "Básico. Primeros pasos biometría." },
+        "Sin Rango": { "name": "Sin Rango", "desc": "Sin datos suficientes." }
+      }
+    }
+  },
+  "auth": {
+    "welcome": {
+      "title": "Bienvenido a",
+      "subtitle": "Tu plataforma de entrenamiento premium. Registra, analiza y supérate cada día.",
+      "access": "Acceder",
+      "google_signup": "Registrarse con Google",
+      "email_signup": "Registrarse con Email",
+      "have_account": "¿Ya tienes cuenta?",
+      "login": "Inicia sesión",
+      "desktop_quote": "Únete a la comunidad Oxyra y comparte tus logros.",
+      "slides": [
+        "Registra tus entrenamientos fácilmente, todo en un solo lugar.",
+        "Analiza tu progreso y rompe tus records personales.",
+        "Únete a la comunidad de Oxyra y comparte tus logros."
+      ]
+    },
+    "login": {
+      "title": "Bienvenido a Oxyra",
+      "subtitle": "Tus entrenamientos te esperan.",
+      "email_user_label": "Email o Usuario",
+      "email_user_placeholder": "ejemplo@oxyra.com o usuario",
+      "password_label": "Contraseña",
+      "password_placeholder": "••••••••",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar Sesión",
+      "no_account": "¿No tienes cuenta?",
+      "register": "Regístrate",
+      "error_fallback": "Error al iniciar sesión",
+      "google_error": "El servidor no pudo validar la cuenta de Google.",
+      "back": "Atrás"
+    },
+    "forgot_password": {
+      "title": "Recuperar Cuenta",
+      "subtitle": "Introduce tu correo para recibir un código de verificación.",
+      "email_label": "Correo Electrónico",
+      "email_placeholder": "tu@correo.com",
+      "submit": "Enviar Código",
+      "sending": "Enviando...",
+      "sent": "Enviado",
+      "success_message": "Código enviado correctamente. Redirigiendo...",
+      "error_sending": "Error al enviar código"
+    },
+    "verify_code": {
+      "title": "Verificar Código",
+      "subtitle": "Hemos enviado un código a ",
+      "code_label": "CÓDIGO DE 6 DÍGITOS",
+      "verify": "Verificar",
+      "verifying": "Verificando...",
+      "success_message": "Código correcto.",
+      "error_length": "El código debe tener 6 dígitos",
+      "error_verifying": "Error al verificar el código"
+    },
+    "reset_password": {
+      "title": "Nueva Contraseña",
+      "subtitle": "Establece una contraseña segura para tu cuenta.",
+      "new_password_label": "Nueva Contraseña",
+      "confirm_password_label": "Confirmar Contraseña",
+      "strength_weak": "Débil",
+      "strength_medium": "Media",
+      "strength_strong": "Fuerte",
+      "submit": "Restablecer Contraseña",
+      "success_message": "Contraseña restablecida correctamente. Inicia sesión.",
+      "error_mismatch": "Las contraseñas no coinciden",
+      "error_weak": "La contraseña es demasiado débil",
+      "error_resetting": "Error al restablecer contraseña"
+    },
+    "register": {
+      "title": "Crear Cuenta",
+      "subtitle": "Comienza tu transformación hoy.",
+      "fullname_label": "Nombre Completo",
+      "fullname_placeholder": "David García",
+      "username_label": "Usuario",
+      "username_placeholder": "david_g",
+      "username_taken": "Este nombre de usuario ya está en uso.",
+      "email_label": "Correo Electrónico",
+      "email_placeholder": "hola@oxyra.com",
+      "email_registered": "Este correo ya está registrado.",
+      "password_label": "Contraseña",
+      "password_placeholder": "••••••••",
+      "strength_weak": "Débil",
+      "strength_medium": "Media",
+      "strength_strong": "Fuerte",
+      "submit": "Crear Cuenta",
+      "have_account": "¿Ya tienes cuenta?",
+      "login": "Inicia Sesión",
+      "error_fallback": "Error al registrarse",
+      "username_available_error": "El usuario no está disponible",
+      "email_available_error": "El correo ya está registrado",
+      "back": "Atrás"
+    },
+    "onboarding": {
+      "carousel": {
+        "slides": [
+          {
+            "title": "Tu progreso, siempre visible",
+            "description": "Registra cada entrenamiento, visualiza tu evolución muscular y sube de rango conforme alcanzas nuevos límites."
+          },
+          {
+            "title": "IA que entrena contigo",
+            "description": "Gemini genera rutinas personalizadas basadas en tus objetivos, equipamiento y disponibilidad. Sin excusas."
+          },
+          {
+            "title": "Compite. Evoluciona. Domina.",
+            "description": "Desde Hierro hasta Oxyra: un sistema de rangos único que te motiva a superarte cada día."
+          }
+        ],
+        "start": "Comenzar",
+        "continue": "Continuar"
+      },
+      "quiz": {
+        "step_label": "{{step}}/{{total}}",
+        "continue": "Continuar",
+        "skip": "Saltar",
+        "finish": "Crear mi plan con IA",
+        "steps": {
+          "1": {
+            "title": "¿Cuál es tu mayor objetivo?",
+            "subtitle": "Elige la opción que más te represente",
+            "options": {
+              "weight_loss": "Perder peso y definir",
+              "strength": "Ser más fuerte",
+              "muscle": "Ganar masa muscular",
+              "athletic": "Ser más atlético",
+              "ranks": "Solo obtener mis rangos"
+            }
+          },
+          "2": {
+            "title": "Quiero conseguir este objetivo porque…",
+            "subtitle": "Tu motivación profunda es clave",
+            "options": {
+              "confidence": "Ganar confianza en mí mismo",
+              "attractive": "Sería más atractivo",
+              "health": "Mejoraría mi salud",
+              "energy": "Tendría más energía",
+              "respect": "Sería más respetado",
+              "potential": "Llegaría a mi potencial físico"
+            }
+          },
+          "3": {
+            "title": "¿Sueles pensar mucho en este objetivo?",
+            "subtitle": "Tu mindset define tu progreso",
+            "options": {
+              "not_much": "No mucho",
+              "sometimes": "A veces",
+              "a_lot": "Mucho",
+              "always": "Todo el tiempo"
+            }
+          },
+          "4": {
+            "title": "¿Por qué no has conseguido este objetivo?",
+            "subtitle": "Identifica tu mayor obstáculo",
+            "options": {
+              "time": "Falta de tiempo",
+              "knowledge": "Falta de conocimiento",
+              "motivation": "Motivación baja",
+              "injury": "Lesiones o molestias físicas",
+              "equipment": "Falta de equipamiento",
+              "never": "Nunca lo he intentado"
+            }
+          },
+          "5": {
+            "title": "¿Cuánta experiencia tienes entrenando?",
+            "subtitle": "Adaptaremos tu plan a tu nivel",
+            "options": {
+              "never": "Nunca he entrenado",
+              "never_desc": "Comenzamos desde cero",
+              "beginner": "Principiante",
+              "beginner_desc": "Lo he intentado antes",
+              "intermediate": "Intermedio",
+              "intermediate_desc": "Entreno regularmente",
+              "advanced": "Avanzado",
+              "advanced_desc": "Años de experiencia"
+            }
+          },
+          "6": {
+            "title": "¿Cuánto pesas?",
+            "subtitle": "Desliza la regla para ajustar tu peso",
+            "info_weight": "Tu peso nos permite calcular cargas ideales de entrenamiento",
+            "info_private": "Esta información es privada y solo la usa la IA"
+          },
+          "7": {
+            "title": "¿Cuál es tu sexo?",
+            "subtitle": "Personaliza tu experiencia desde el inicio",
+            "male": "Masculino",
+            "female": "Femenino"
+          },
+          "8": {
+            "title": "¿Cuánto mides?",
+            "subtitle": "Desliza la regla para ajustar tu altura",
+            "info_height": "Usamos tu altura para calcular proporciones y rangos de movimiento ideales"
+          },
+          "9": {
+            "title": "¿Cómo nos has conocido?",
+            "subtitle": "Ayúdanos a entender cómo llegaste aquí",
+            "options": {
+              "friends": "Amigos o familia",
+              "tiktok": "TikTok",
+              "instagram": "Instagram",
+              "youtube": "YouTube",
+              "store": "App Store o Play Store",
+              "other": "Otro"
+            }
+          },
+          "10": {
+            "title": "El sistema de rangos de Oxyra",
+            "subtitle": "Cada entrenamiento te acerca a la cima",
+            "until_where": "¿Hasta dónde llegarás?"
+          },
+          "11": {
+            "title": "¿Qué equipamiento tienes disponible?",
+            "subtitle": "La IA adaptará el plan a tu entorno",
+            "options": {
+              "home": "Equipamiento en casa",
+              "small_gym": "Gimnasio pequeño",
+              "calisthenics": "Equipamiento de calistenia",
+              "commercial_gym": "Gimnasio comercial"
+            }
+          },
+          "12": {
+            "title": "¿Cuántos días a la semana quieres entrenar?",
+            "subtitle": "Elige cuánto o cuándo entrenas",
+            "mode_count": "Por semana",
+            "mode_specific": "Días específicos",
+            "days_count": {
+              "1": "1 día",
+              "2": "2 días",
+              "3": "3 días",
+              "4": "4 días",
+              "5": "5 días",
+              "6": "6 días",
+              "7": "Todos los días"
+            },
+            "days_short": {
+              "lunes": "L",
+              "martes": "M",
+              "miercoles": "X",
+              "jueves": "J",
+              "viernes": "V",
+              "sabado": "S",
+              "domingo": "D"
+            }
+          },
+          "13": {
+            "title": "¿Cuánto tiempo tienes para entrenar?",
+            "subtitle": "Optimizamos el plan a tu disponibilidad",
+            "options": {
+              "15": { "label": "15 minutos", "subtitle": "Express" },
+              "30": { "label": "30 minutos", "subtitle": "Eficiente" },
+              "45": { "label": "45 minutos", "subtitle": "En serio" },
+              "60": { "label": "60 minutos", "subtitle": "Intenso" },
+              "90": { "label": "90+ minutos", "subtitle": "Obsesivo" }
+            }
+          },
+          "14": {
+            "title": "¿Tienes algún dolor o lesión?",
+            "subtitle": "La IA evitará sobrecargar las zonas afectadas",
+            "no_injuries": "Sin dolores registrados — perfecto para entrenar sin restricciones",
+            "options": {
+              "back": "Dolor de espalda",
+              "knee": "Dolor de rodilla",
+              "hip": "Dolor de cadera",
+              "elbow": "Dolor de codo",
+              "shoulder": "Dolor de hombro",
+              "wrist": "Dolor de muñeca"
+            }
+          }
+        }
+      },
+      "generating": {
+        "title": "Creando tu plan con IA",
+        "messages": [
+          "Analizando tu perfil...",
+          "Diseñando tu plan personalizado...",
+          "Seleccionando ejercicios óptimos...",
+          "Ajustando cargas e intensidad...",
+          "Finalizando tu programa..."
+        ]
+      },
+      "success": {
+        "title": "Tu plan está listo",
+        "subtitle": "La IA ha creado un programa personalizado y lo ha añadido a tus rutinas",
+        "cta": "Entrenar con Oxyra"
+      }
+    }
+  },
+  "routine_detail": {
+      "edit": "Editar",
+      "description_label": "Descripción del plan",
+      "no_description": "Sin descripción añadida.",
+      "today_routine": "Rutina de hoy",
+      "no_exercises": "No hay ejercicios configurados.",
+      "start_workout": "Comenzar Entrenamiento",
+      "edit_sheet_title": "Editar Detalles",
+      "name_label": "Nombre de la Rutina",
+      "objective_label": "Etiqueta / Objetivo",
+      "description_placeholder": "Añade notas importantes sobre esta rutina...",
+      "save_changes": "Guardar Cambios",
+      "name_required": "El nombre es obligatorio",
+      "error_updating": "Error al actualizar",
+      "not_found": "Rutina no encontrada",
+      "level": "Nivel",
+      "objective": "Objetivo"
+    },
+    "workout_session": {
+      "finish": "Finalizar",
+      "exercise_of": "Ejercicio {{current}} de {{total}}",
+      "prev": "Anterior",
+      "next_exercise": "Siguiente Ejercicio",
+      "finish_routine": "Terminar Rutina",
+      "confirm_finish": "¿Finalizar entrenamiento y guardar?",
+      "confirm_exit": "¿Salir sin guardar?",
+      "error_loading": "Error al cargar la rutina",
+      "error_saving": "Error al guardar el entrenamiento.",
+      "connection_error_saving": "Error de conexión al guardar.",
+      "cancel": {
+        "title": "¿Por qué cancelas?",
+        "subtitle": "Elige un motivo para ayudarnos a mejorar.",
+        "confirm": "Finalizar y Salir",
+        "reasons": {
+          "wrong_routine": "Me he equivocado de rutina",
+          "no_time": "No tengo tiempo para terminar",
+          "technical": "Problemas técnicos o errores",
+          "tired": "Estoy demasiado cansado/a",
+          "equipment": "Falta material en el gimnasio",
+          "other": "Otro"
+        }
+      },
+      "exercise": {
+        "muscle": "Músculo",
+        "set": "Set",
+        "kg": "Kg",
+        "reps": "Reps",
+        "done": "Hecho",
+        "add_set": "Añadir Serie",
+        "delete_set_confirm": "¿Eliminar esta serie?",
+        "rest_title": "Descanso",
+        "weight_title": "Peso (Kg)",
+        "reps_title": "Repeticiones"
+      },
+      "rest": {
+        "title": "Descanso",
+        "sound_on_hint": "Activar sonido",
+        "sound_off_hint": "Desactivar sonido (Solo vibración)"
+      },
+      "exercise_info": {
+        "no_image": "Sin imagen disponible",
+        "technique_tips": "Tips de Técnica",
+        "tip_1": "Mantén la espalda recta y el core activado durante todo el movimiento para proteger tu columna.",
+        "tip_2": "Controla la fase excéntrica (bajada) durante 2-3 segundos para maximizar la tensión muscular.",
+        "tip_3": "Exhala durante el esfuerzo (fase concéntrica) e inhala durante el retorno. Una respiración correcta mejora el rendimiento."
+      }
+    },
+  "social": {
+    "leaderboard": {
+      "empty": {
+        "title": "La competición es mejor con amigos",
+        "description": "Añade amigos para competir en el ranking y ver quién tiene el mejor Oxyra Score.",
+        "search_button": "Buscar Amigos"
+      }
+    }
+  },
+  "stats": {
+    "volume_chart": {
+      "title": "VOLUMEN",
+      "logs": "{{count}} entreno",
+      "logs_plural": "{{count}} entrenos",
+      "best_log": "mejor entreno",
+      "no_data": "Sin entrenos en este periodo",
+      "periods": {
+        "week": "Esta semana",
+        "month": "Este mes",
+        "months_3": "3 meses",
+        "year": "Este año",
+        "always": "Siempre"
+      },
+      "days": ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+      "months": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+    }
+  },
+  "exercises": {
+    "Press de Banca": "Press de Banca",
+    "Aperturas con Mancuernas": "Aperturas con Mancuernas",
+    "Flexiones de Brazo": "Flexiones de Brazo",
+    "Press Inclinado": "Press Inclinado",
+    "Dominadas": "Dominadas",
+    "Jalón al Pecho": "Jalón al Pecho",
+    "Remo con Manubrio": "Remo con Mancuerna",
+    "Face Pulls": "Face Pulls",
+    "Remo con Barra": "Remo con Barra",
+    "Remo en Polea Baja": "Remo en Polea Baja",
+    "Pull-overs": "Pull-overs",
+    "Peso Muerto": "Peso Muerto",
+    "Extensiones Lumbares": "Extensiones Lumbares",
+    "Buenos Días": "Buenos Días",
+    "Press Militar": "Press Militar",
+    "Elevaciones Laterales": "Elevaciones Laterales",
+    "Elevaciones Frontales": "Elevaciones Frontales",
+    "Pájaros": "Pájaros",
+    "Encogimientos con Barra": "Encogimientos con Barra",
+    "Remo al Mentón": "Remo al Mentón",
+    "Encogimientos con Mancuernas": "Encogimientos con Mancuernas",
+    "Curl de Bíceps": "Curl de Bíceps",
+    "Curl Martillo": "Curl Martillo",
+    "Curl en Banco Scott": "Curl en Banco Scott",
+    "Curl de Concentración": "Curl de Concentración",
+    "Press Francés": "Press Francés",
+    "Extensiones en Polea Alta": "Extensiones en Polea Alta",
+    "Dips (Fondos)": "Dips (Fondos)",
+    "Pushdown": "Pushdown",
+    "Curl de Muñeca": "Curl de Muñeca",
+    "Paseo del Granjero": "Paseo del Granjero",
+    "Sentadillas": "Sentadillas",
+    "Prensa de Piernas": "Prensa de Piernas",
+    "Extensiones de Cuadriceps": "Extensiones de Cuádriceps",
+    "Zancadas": "Zancadas",
+    "Curl Femoral": "Curl Femoral",
+    "Peso Muerto Rumano": "Peso Muerto Rumano",
+    "Hip Thrust": "Hip Thrust",
+    "Sentadilla Búlgara": "Sentadilla Búlgara",
+    "Patada de Glúteo": "Patada de Glúteo",
+    "Abducción de Cadera": "Abducción de Cadera",
+    "Aducción en Máquina": "Aducción en Máquina",
+    "Zancada Lateral": "Zancada Lateral",
+    "Sentadilla Sumo": "Sentadilla Sumo",
+    "Crunches": "Crunches",
+    "Plancha": "Plancha",
+    "Elevación de Piernas": "Elevación de Piernas",
+    "Rueda Abdominal": "Rueda Abdominal"
+  },
+  "desktop": {
+    "title": "Oxyra — Versión Escritorio",
+    "description": "Accede desde tu móvil para disfrutar de la experiencia completa.",
+    "sidebar": {
+      "welcome_title": "Bienvenido a Oxyra Desktop",
+      "welcome_description": "Experimenta la mejor forma de organizar tus rutinas de entrenamiento y nutrición directamente desde tu PC.",
+      "view_progress": "Ver mi Progreso",
+      "quick_links": "Enlaces rápidos",
+      "explore_exercises": "Explorar Perfiles",
+      "account_settings": "Configuración de Cuenta",
+      "terms": "Términos",
+      "privacy": "Privacidad"
+    }
+  }
+}
