@@ -1,4 +1,4 @@
-name: "Deploy | Production"
+name: "Oxyra | Production Deploy"
 
 on:
   push:
@@ -18,7 +18,7 @@ on:
         type: boolean
         default: false
 
-run-name: "Deploy production | ${{ github.event_name }} | ${{ github.sha }}"
+run-name: "Oxyra production deploy #${{ github.run_number }} | ${{ github.ref_name }} | by @${{ github.actor }}"
 
 concurrency:
   group: oxyra-production
@@ -33,7 +33,7 @@ env:
 
 jobs:
   preflight:
-    name: "Preflight | Deployment plan"
+    name: "1 | Release plan"
     runs-on: ubuntu-latest
     outputs:
       deploy_frontend: ${{ steps.plan.outputs.deploy_frontend }}
@@ -41,7 +41,7 @@ jobs:
       run_prisma_push: ${{ steps.plan.outputs.run_prisma_push }}
 
     steps:
-      - name: Resolve deployment plan
+      - name: Choose deployment scope
         id: plan
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -54,7 +54,7 @@ jobs:
             echo "run_prisma_push=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Validate required secrets
+      - name: Check VPS secrets
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -70,23 +70,26 @@ jobs:
           done
           exit "$missing"
 
-      - name: Deployment plan summary
+      - name: Write release plan summary
         run: |
           {
-            echo "## Deployment plan"
+            echo "## Oxyra production deploy"
             echo ""
-            echo "| Item | Value |"
+            echo "### Release plan"
+            echo ""
+            echo "| Field | Value |"
             echo "| --- | --- |"
             echo "| Trigger | \`${{ github.event_name }}\` |"
             echo "| Branch | \`${{ github.ref_name }}\` |"
             echo "| Commit | [\`${{ github.sha }}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) |"
+            echo "| Actor | @${{ github.actor }} |"
             echo "| Frontend | \`${{ steps.plan.outputs.deploy_frontend }}\` |"
             echo "| Backend | \`${{ steps.plan.outputs.deploy_backend }}\` |"
             echo "| Prisma db push | \`${{ steps.plan.outputs.run_prisma_push }}\` |"
           } >> "$GITHUB_STEP_SUMMARY"
 
   build_frontend:
-    name: "Frontend | Build artifact"
+    name: "2A | Build React app"
     runs-on: ubuntu-latest
     needs: preflight
     if: needs.preflight.outputs.deploy_frontend == 'true'
@@ -95,7 +98,7 @@ jobs:
         working-directory: frontend
 
     steps:
-      - name: Checkout repository
+      - name: Checkout source code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -105,23 +108,23 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Build Vite app
+      - name: Build production bundle
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
         run: npm run build
 
-      - name: Verify dist
+      - name: Inspect dist output
         id: dist
         run: |
           test -f dist/index.html
           echo "size=$(du -sh dist | cut -f1)" >> "$GITHUB_OUTPUT"
           echo "files=$(find dist -type f | wc -l)" >> "$GITHUB_OUTPUT"
 
-      - name: Upload frontend artifact
+      - name: Upload deploy artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
@@ -129,10 +132,10 @@ jobs:
           retention-days: 7
           if-no-files-found: error
 
-      - name: Frontend build summary
+      - name: Write frontend summary
         run: |
           {
-            echo "## Frontend artifact"
+            echo "## Frontend build"
             echo ""
             echo "| Detail | Value |"
             echo "| --- | --- |"
@@ -143,7 +146,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   validate_backend:
-    name: "Backend | Validate before deploy"
+    name: "2B | Validate API"
     runs-on: ubuntu-latest
     needs: preflight
     if: needs.preflight.outputs.deploy_backend == 'true'
@@ -152,7 +155,7 @@ jobs:
         working-directory: Backend
 
     steps:
-      - name: Checkout repository
+      - name: Checkout source code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -162,17 +165,29 @@ jobs:
           cache: npm
           cache-dependency-path: Backend/package-lock.json
 
-      - name: Install dependencies
+      - name: Install backend dependencies
         run: npm ci
 
-      - name: Validate Prisma schema
+      - name: Validate database schema
         run: npx prisma validate
 
       - name: Generate Prisma Client
         run: npx prisma generate
 
-  deploy:
-    name: "VPS | Publish release"
+      - name: Write backend summary
+        run: |
+          {
+            echo "## Backend validation"
+            echo ""
+            echo "| Check | Result |"
+            echo "| --- | --- |"
+            echo "| Dependencies | ready |"
+            echo "| Prisma schema | valid |"
+            echo "| Prisma Client | generated |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  production_gate:
+    name: "3 | Production gate"
     runs-on: ubuntu-latest
     needs: [preflight, build_frontend, validate_backend]
     if: |
@@ -185,21 +200,34 @@ jobs:
       url: ${{ vars.PRODUCTION_URL || 'https://jordi.informaticamajada.es' }}
 
     steps:
-      - name: Checkout repository metadata
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            .github
-            Backend/ecosystem.config.cjs
+      - name: Confirm production release
+        run: |
+          {
+            echo "## Production gate"
+            echo ""
+            echo "Build and validation stages are ready for the VPS release."
+          } >> "$GITHUB_STEP_SUMMARY"
 
+  publish_frontend:
+    name: "4A | Publish frontend"
+    runs-on: ubuntu-latest
+    needs: [preflight, build_frontend, validate_backend, production_gate]
+    if: |
+      always() &&
+      needs.preflight.result == 'success' &&
+      needs.production_gate.result == 'success' &&
+      needs.preflight.outputs.deploy_frontend == 'true' &&
+      needs.build_frontend.result == 'success' &&
+      (needs.validate_backend.result == 'success' || needs.validate_backend.result == 'skipped')
+
+    steps:
       - name: Download frontend artifact
-        if: needs.preflight.outputs.deploy_frontend == 'true'
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: dist-artifact/
 
-      - name: Configure SSH
+      - name: Open SSH channel
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
@@ -211,8 +239,7 @@ jobs:
           chmod 600 ~/.ssh/oxyra_deploy_key
           ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Publish frontend with rsync
-        if: needs.preflight.outputs.deploy_frontend == 'true'
+      - name: Sync static files to Nginx
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -227,8 +254,32 @@ jobs:
             dist-artifact/ \
             "${VPS_USER}@${VPS_HOST}:${target}/"
 
-      - name: Update backend and reload PM2
-        if: needs.preflight.outputs.deploy_backend == 'true'
+      - name: Write frontend deploy summary
+        run: |
+          {
+            echo "## Frontend published"
+            echo ""
+            echo "| Target | Value |"
+            echo "| --- | --- |"
+            echo "| Server path | \`${{ vars.VPS_DEPLOY_PATH || '/var/www/html/Oxyra' }}/frontend/dist\` |"
+            echo "| Method | \`rsync --delete\` |"
+            echo "| Artifact | \`${{ env.ARTIFACT_NAME }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy_backend:
+    name: "4B | Reload API"
+    runs-on: ubuntu-latest
+    needs: [preflight, build_frontend, validate_backend, production_gate]
+    if: |
+      always() &&
+      needs.preflight.result == 'success' &&
+      needs.production_gate.result == 'success' &&
+      needs.preflight.outputs.deploy_backend == 'true' &&
+      needs.validate_backend.result == 'success' &&
+      (needs.build_frontend.result == 'success' || needs.build_frontend.result == 'skipped')
+
+    steps:
+      - name: Pull code, install backend and reload PM2
         uses: appleboy/ssh-action@v1.2.0
         env:
           VPS_DEPLOY_PATH: ${{ vars.VPS_DEPLOY_PATH || '/var/www/html/Oxyra' }}
@@ -274,7 +325,30 @@ jobs:
             pm2 save
             pm2 status "$pm2_name"
 
-      - name: Health check
+      - name: Write backend deploy summary
+        run: |
+          {
+            echo "## Backend reloaded"
+            echo ""
+            echo "| Detail | Value |"
+            echo "| --- | --- |"
+            echo "| Server path | \`${{ vars.VPS_DEPLOY_PATH || '/var/www/html/Oxyra' }}/Backend\` |"
+            echo "| PM2 app | \`${{ vars.PM2_APP_NAME || 'oxyra-api' }}\` |"
+            echo "| Prisma db push | \`${{ needs.preflight.outputs.run_prisma_push }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  health_check:
+    name: "5 | Health check"
+    runs-on: ubuntu-latest
+    needs: [preflight, publish_frontend, deploy_backend]
+    if: |
+      always() &&
+      needs.preflight.result == 'success' &&
+      (needs.publish_frontend.result == 'success' || needs.publish_frontend.result == 'skipped') &&
+      (needs.deploy_backend.result == 'success' || needs.deploy_backend.result == 'skipped')
+
+    steps:
+      - name: Check public API
         env:
           HEALTH_CHECK_URL: ${{ vars.HEALTH_CHECK_URL || format('{0}/api/health', vars.PRODUCTION_URL || 'https://jordi.informaticamajada.es') }}
         run: |
@@ -289,16 +363,40 @@ jobs:
           done
           echo "::warning::Health check did not return status ok. Review PM2 and Nginx logs on the VPS."
 
-      - name: Deployment summary
-        if: always()
+      - name: Write health summary
         run: |
           {
-            echo "## Production deployment"
+            echo "## Health check"
             echo ""
-            echo "| Step | Result |"
+            echo "| Check | URL |"
             echo "| --- | --- |"
-            echo "| Frontend | \`${{ needs.preflight.outputs.deploy_frontend }}\` |"
-            echo "| Backend | \`${{ needs.preflight.outputs.deploy_backend }}\` |"
+            echo "| API status | \`${{ vars.HEALTH_CHECK_URL || format('{0}/api/health', vars.PRODUCTION_URL || 'https://jordi.informaticamajada.es') }}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  release_summary:
+    name: "6 | Release summary"
+    runs-on: ubuntu-latest
+    needs: [preflight, build_frontend, validate_backend, production_gate, publish_frontend, deploy_backend, health_check]
+    if: always()
+
+    steps:
+      - name: Write final deploy card
+        run: |
+          {
+            echo "## Oxyra release summary"
+            echo ""
+            echo "| Stage | Result |"
+            echo "| --- | --- |"
+            echo "| 1. Release plan | \`${{ needs.preflight.result }}\` |"
+            echo "| 2A. React build | \`${{ needs.build_frontend.result }}\` |"
+            echo "| 2B. API validation | \`${{ needs.validate_backend.result }}\` |"
+            echo "| 3. Production gate | \`${{ needs.production_gate.result }}\` |"
+            echo "| 4A. Frontend publish | \`${{ needs.publish_frontend.result }}\` |"
+            echo "| 4B. API reload | \`${{ needs.deploy_backend.result }}\` |"
+            echo "| 5. Health check | \`${{ needs.health_check.result }}\` |"
+            echo ""
+            echo "| Release | Value |"
+            echo "| --- | --- |"
             echo "| Commit | [\`${{ github.sha }}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) |"
             echo "| Environment | [production](${{ vars.PRODUCTION_URL || 'https://jordi.informaticamajada.es' }}) |"
             echo "| Actor | @${{ github.actor }} |"
