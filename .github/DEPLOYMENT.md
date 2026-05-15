@@ -1,184 +1,126 @@
-# Oxyra — Guía de despliegue (CI/CD)
+# Oxyra - Guia de CI/CD y despliegue
 
-Documentación para configurar **GitHub Actions**, **secrets**, **variables** y el **VPS** de producción.
+Esta guia documenta el flujo de GitHub Actions para publicar Oxyra en el VPS de produccion.
 
----
-
-## Arquitectura del pipeline
+## Pipeline
 
 ```mermaid
 flowchart LR
-  subgraph GitHub
-    A[Push / PR] --> B{Branch?}
-    B -->|PR / feature| C[ci.yml]
-    B -->|main| D[deploy.yml]
-    D --> E[Build Vite]
-    E --> F[Artifact dist]
-    F --> G[RSync SSH]
-    G --> H[SSH: git pull + PM2]
-    H --> I[Health check]
-  end
-  subgraph VPS
-    G --> J[Nginx → frontend/dist]
-    H --> K[PM2 → oxyra-api]
-    K --> L[MariaDB]
-  end
+  A[Push o Pull Request] --> B{Destino}
+  B -->|PR a main| C[CI: lint + build + Prisma]
+  B -->|Rama distinta de main| C
+  B -->|Push a main| D[Deploy production]
+  D --> E[Preflight: secrets + plan]
+  E --> F[Build frontend]
+  E --> G[Validate backend]
+  F --> H[Artifact frontend/dist]
+  G --> I[VPS deploy]
+  H --> I
+  I --> J[RSync frontend]
+  I --> K[git pull + npm ci + PM2 reload]
+  K --> L[Health check /api/health]
 ```
 
-| Workflow | Archivo | Cuándo se ejecuta |
-|----------|---------|-------------------|
-| **CI** | [`.github/workflows/ci.yml`](workflows/ci.yml) | Pull requests y pushes que no son `main` |
-| **Deploy** | [`.github/workflows/deploy.yml`](workflows/deploy.yml) | Push a `main` o ejecución manual |
+| Workflow | Archivo | Uso |
+| --- | --- | --- |
+| CI | `.github/workflows/ci.yml` | Pull requests y ramas que no sean `main` |
+| Deploy | `.github/workflows/deploy.yml` | Push a `main` y ejecucion manual |
 
----
+## Secrets obligatorios
 
-## 1. Secrets en GitHub (obligatorios)
+Configuralos en **Repository > Settings > Secrets and variables > Actions > Secrets**.
 
-Ir a: **Repository → Settings → Secrets and variables → Actions → New repository secret**
+| Secret | Descripcion | Ejemplo |
+| --- | --- | --- |
+| `VPS_HOST` | IP o dominio del VPS | `vps.example.com` |
+| `VPS_USER` | Usuario SSH de despliegue | `jordi` |
+| `VPS_PORT` | Puerto SSH | `22` |
+| `VPS_SSH_PRIVATE_KEY` | Clave privada SSH completa | Contenido de `id_ed25519` |
+| `VITE_API_URL` | URL publica base de la API | `https://jordi.informaticamajada.es` |
+| `VITE_STRIPE_PUBLIC_KEY` | Clave publica de Stripe | `pk_live_...` |
 
-| Secret | Descripción | Ejemplo |
-|--------|-------------|---------|
-| `VPS_HOST` | IP o dominio del VPS | `187.33.xxx.xxx` o `vps.tudominio.es` |
-| `VPS_USER` | Usuario SSH | `Jordi` |
-| `VPS_PORT` | Puerto SSH | `2222` |
-| `VPS_SSH_PRIVATE_KEY` | Clave privada SSH completa (PEM) | Contenido de `id_rsa` o `id_ed25519` |
-| `VITE_API_URL` | URL base de la API para el build de Vite | `https://jordi.informaticamajada.es` |
-| `VITE_STRIPE_PUBLIC_KEY` | Clave pública de Stripe (pk_live_… o pk_test_…) | `pk_live_...` |
+## Variables opcionales
 
-### Migración desde secrets antiguos
+Configuralas en **Repository > Settings > Secrets and variables > Actions > Variables**.
 
-Si ya tenías configurado el workflow anterior:
+| Variable | Descripcion | Valor por defecto |
+| --- | --- | --- |
+| `VPS_DEPLOY_PATH` | Ruta del repo en el VPS | `/var/www/html/Oxyra` |
+| `PRODUCTION_URL` | URL publica del entorno | `https://jordi.informaticamajada.es` |
+| `HEALTH_CHECK_URL` | Endpoint de verificacion | `{PRODUCTION_URL}/api/health` |
+| `PM2_APP_NAME` | Nombre del proceso en PM2 | `oxyra-api` |
 
-| Antes | Ahora |
-|-------|-------|
-| `PRIVATE_KEY` | `VPS_SSH_PRIVATE_KEY` |
-| `IP` | `VPS_HOST` |
+## Preparacion del VPS
 
-Puedes renombrar o duplicar los valores y eliminar los antiguos cuando el deploy funcione.
-
----
-
-## 2. Variables de repositorio (opcionales, no sensibles)
-
-**Settings → Secrets and variables → Actions → Variables**
-
-| Variable | Descripción | Valor por defecto |
-|----------|-------------|-------------------|
-| `VPS_DEPLOY_PATH` | Ruta del proyecto en el VPS | `/var/www/html/Oxyra` |
-| `PRODUCTION_URL` | URL pública (badge + environment) | `https://jordi.informaticamajada.es` |
-| `HEALTH_CHECK_URL` | Endpoint de comprobación post-deploy | `{PRODUCTION_URL}/api/health` |
-| `PM2_APP_NAME` | Nombre del proceso PM2 | `oxyra-api` |
-
----
-
-## 3. Generar y registrar la clave SSH
-
-### En tu PC (Windows PowerShell o Git Bash)
+El workflow asume que el repositorio ya existe en el servidor:
 
 ```bash
-ssh-keygen -t ed25519 -C "github-actions-oxyra" -f ~/.ssh/oxyra_deploy -N ""
+cd /var/www/html
+git clone git@github.com:Cyod75/Oxyra.git Oxyra
 ```
 
-- **Clave privada** → secret `VPS_SSH_PRIVATE_KEY` (todo el archivo `oxyra_deploy`, incluyendo `-----BEGIN ...-----`).
-- **Clave pública** → en el VPS:
-
-```bash
-# En el VPS, como el usuario de deploy:
-mkdir -p ~/.ssh && chmod 700 ~/.ssh
-echo "CONTENIDO_DE_oxyra_deploy.pub" >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
-```
-
-Probar desde local:
-
-```bash
-ssh -i ~/.ssh/oxyra_deploy -p 2222 Jordi@TU_IP
-```
-
----
-
-## 4. Preparar el VPS (una sola vez)
-
-### Requisitos
-
-- Linux, Node.js ≥ 20, Git, Nginx, MariaDB, PM2
-- Repositorio clonado en `/var/www/html/Oxyra`
-- Archivo `Backend/.env` en el servidor (nunca en Git)
-
-### Backend
+Backend:
 
 ```bash
 cd /var/www/html/Oxyra/Backend
-npm install
+npm ci
 npx prisma generate
-npx prisma db push   # o migrate deploy, según tu flujo
 pm2 start ecosystem.config.cjs --env production
 pm2 save
-pm2 startup
 ```
 
-### Frontend (primera vez; luego lo hace GitHub Actions)
+Frontend:
 
 ```bash
 cd /var/www/html/Oxyra/frontend
-npm install && npm run build
+npm ci --legacy-peer-deps
+npm run build
 ```
 
-### Nginx
+Nginx debe servir:
 
-`root` → `/var/www/html/Oxyra/frontend/dist`  
-Proxy `/api/` → `http://127.0.0.1:3001`
+```nginx
+root /var/www/html/Oxyra/frontend/dist;
 
----
+location / {
+    try_files $uri $uri/ /index.html;
+}
 
-## 5. Environment `production` en GitHub (recomendado)
-
-1. **Settings → Environments → New environment** → `production`
-2. Opcional: **Required reviewers** antes de desplegar
-3. Opcional: **Deployment branches** → solo `main`
-
-El workflow `deploy.yml` ya usa `environment: production`.
-
----
-
-## 6. Despliegue manual
-
-**Actions → 🚀 Deploy — Production → Run workflow**
-
-| Opción | Uso |
-|--------|-----|
-| Deploy frontend | Sube `dist/` por RSync |
-| Deploy backend | `git pull`, `npm ci`, `prisma generate`, `pm2 reload` |
-| Run prisma db push | Sincroniza schema en BD (**solo si sabes que es seguro**) |
-
----
-
-## 7. Checklist rápido
-
-- [ ] Secrets: `VPS_HOST`, `VPS_USER`, `VPS_PORT`, `VPS_SSH_PRIVATE_KEY`
-- [ ] Secrets: `VITE_API_URL`, `VITE_STRIPE_PUBLIC_KEY`
-- [ ] Clave pública SSH en `~/.ssh/authorized_keys` del VPS
-- [ ] Repo clonado en `VPS_DEPLOY_PATH` con acceso `git pull` (deploy key o HTTPS token)
-- [ ] `Backend/.env` con `DATABASE_URL`, `JWT_SECRET`, APIs, Stripe, etc.
-- [ ] PM2: proceso `oxyra-api` o `ecosystem.config.cjs`
-- [ ] Nginx recargado y firewall permite puerto SSH
-- [ ] Push a `main` → pipeline verde → sitio actualizado
-
----
-
-## 8. Solución de problemas
-
-| Síntoma | Posible causa |
-|---------|----------------|
-| `Permission denied (publickey)` | Secret `VPS_SSH_PRIVATE_KEY` incorrecto o clave no en `authorized_keys` |
-| `cd Backend` no existe | Ruta en VPS distinta; revisar `VPS_DEPLOY_PATH` y mayúsculas (`Backend`) |
-| Frontend sin API | Falta `VITE_API_URL` en secrets al hacer build |
-| PM2 no reinicia | Nombre distinto; definir `PM2_APP_NAME` o usar `ecosystem.config.cjs` |
-| Health check warning | Nginx/SSL o API aún arrancando; revisar `pm2 logs oxyra-api` |
-
-Logs en el VPS:
-
-```bash
-pm2 logs oxyra-api --lines 100
-sudo nginx -t && sudo systemctl status nginx
+location /api/ {
+    proxy_pass http://127.0.0.1:3001;
+}
 ```
+
+## Despliegue manual
+
+En GitHub:
+
+1. Entra en **Actions**.
+2. Abre **Deploy | Production**.
+3. Pulsa **Run workflow**.
+4. Elige que partes quieres publicar:
+
+| Opcion | Uso recomendado |
+| --- | --- |
+| `deploy_frontend` | Publicar solo cambios visuales o de React |
+| `deploy_backend` | Actualizar API, controladores, Prisma o PM2 |
+| `run_prisma_push` | Sincronizar schema Prisma con la BD; usar solo cuando lo tengas claro |
+
+## Que hace el deploy
+
+1. Comprueba secrets y muestra el plan en el resumen de GitHub.
+2. Construye `frontend/dist` con Vite y lo guarda como artifact.
+3. Valida Prisma en el backend antes de tocar el VPS.
+4. Sube el frontend con `rsync --delete`.
+5. En el VPS ejecuta `git pull --ff-only origin main`, `npm ci`, `npx prisma generate` y recarga PM2.
+6. Llama a `/api/health` para confirmar que la API responde.
+
+## Troubleshooting
+
+| Sintoma | Revisar |
+| --- | --- |
+| `Permission denied (publickey)` | `VPS_SSH_PRIVATE_KEY` y `authorized_keys` del VPS |
+| `Not possible to fast-forward` | Hay cambios locales en el VPS; revisalos antes de desplegar |
+| `dist/index.html` no existe | Fallo en el build de Vite |
+| PM2 no recarga | `PM2_APP_NAME` o `Backend/ecosystem.config.cjs` |
+| Health check no pasa | `pm2 logs oxyra-api`, Nginx y `/api/health` |
